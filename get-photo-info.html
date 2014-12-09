@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Get Instagram Photo Info</title>
+	<link rel="stylesheet" type="text/css" href="http://reset5.googlecode.com/hg/reset.min.css">
+	<style type="text/css">
+		body {
+			font-family: "Helvetica", sans-serif;
+			line-height: 1.35em;
+			margin-top:20px;
+			margin-left:20px;
+		}
+		h1 {
+			font-size: 2em;
+			line-height: 1.15em;
+			margin-bottom:40px;
+		}
+		#small {
+			font-size:0.75em;
+		}
+		.indent {
+			text-indent: 50px;
+		}
+	</style>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="http://www.tampabay.com/specials/2013/graphics/alex-test/instagram/write-to-csv.php"></script>
+	<script src="miso.ds.deps.min.0.3.0.js"></script>
+	<script type="text/javascript">
+		function getPhotoInfo() {
+			var urly = document.getElementById('urly').value;
+			grabImages(urly);
+		}
+
+		function grabImages(urly) {
+			var instagramUrl = 'http://api.instagram.com/oembed?url=' + urly + '&format=json&callback=?';
+			console.log(instagramUrl);
+
+			$.getJSON(instagramUrl, onDataLoaded);
+		}
+
+		function onDataLoaded(instagram_data) {
+			console.log(instagram_data);
+			var mediaid = instagram_data.media_id;
+			console.log(mediaid);
+			var access_token = "317872566.41f059b.2fd5e23cce14435f8c7edfe4e3deef38";
+			var access_parameters = {access_token:access_token};
+
+			var newUrl = 'https://api.instagram.com/v1/media/' + mediaid + '?callback=?';
+
+			$.getJSON(newUrl, access_parameters, nextDataLoaded);
+		}
+
+		function nextDataLoaded(instagram_data) {
+			console.log(instagram_data.meta.code);
+			console.log(instagram_data);
+			var info = instagram_data.data;
+			var latitudeHolder = "";
+			var longitudeHolder = "";
+			var captionHolder = "";
+
+			if(info.location != null) {
+				latitudeHolder = info.location.latitude;
+				longitudeHolder = info.location.longitude;
+			}
+
+			if(info.caption != null) {
+				captionHolder = info.caption.text;
+			}
+
+			$('#target').append('<table border="1"><tr><td>' + info.link + '</td><td>' + info.images.low_resolution.url + '</td><td>' + info.images.thumbnail.url + '</td><td>' + captionHolder + '</td><td>' + info.user.username + '</td><td>' + latitudeHolder + '</td><td>' + longitudeHolder + '</td></tr></table><br/>');
+		}
+	</script>
+</head>
+<body>
+	<h1>Use this to get Instagram photo information for the Times' <a href="http://www.tampabay.com/specials/2013/graphics/alex-test/instagram/instagramtest.html" target="_blank">Holiday Light Mapper</a></h1>
+	<p>Once you get the data, manually add it by going to this <a href="https://docs.google.com/spreadsheet/ccc?key=0Aio29w9-EzLudEREZ3ZaREF5T2NuSXRmaXhHMFczOHc&usp=drive_web#gid=0" target="_blank">link</a> and pasting the data to the end of the file. Just copy and paste the whole line (the spreadsheet will recognize the tabs here and paste each piece of info into separate cells).</p><br/><br/><br/>
+	<form>
+		Instagram photo URL: <input id="urly" type="text" size="50" value="">
+		<input id="buttonify" type="button" value="Get Info" onclick="getPhotoInfo();"><br/>
+		<span id="small"><em>make sure the URL does not have a # at the end<br/>(example: http://instagram.com/p/hhMgtXwuno/)</em></span>
+	</form>
+	<br>
+	<br>
+	<br>
+	<div id="target"></div>
+</body>
+</html>
