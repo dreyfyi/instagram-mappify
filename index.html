@@ -34,15 +34,17 @@
 			}
 		</style>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBY0J_AcuXF9g7PjEiTu2ZVCzgcOvhFHNk&sensor=false"></script>
+		<!-- MAKE SURE TO INCLUDE YOUR OWN GOOGLE MAPS API KEY IN THIS SCRIPT -->
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&sensor=false"></script>
 		<script src="miso.ds.deps.min.0.3.0.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
 				//********************* FOR INSTAGRAM ***********************
 				var tag = "TampaBayHoliday";
 				var count = 10;
-				var access_token = "317872566.a1db50a.ae7873dc8f8e4312b57c40b4c9c5e71c";
-				var max_tag_id = '1388778349952173'; //'625440586278328621_308088797';
+				var access_token = "YOUR_API_TOKEN";
+				//in the even that you want to filter the posts after a certain one
+				var max_tag_id = '1388778349952173';
 				var access_parameters = {access_token:access_token};
 				var photos = new Array();
 				var blocked = new Array();
@@ -61,7 +63,7 @@
 				var ds = new Miso.Dataset({
 					importer: Miso.Dataset.Importers.GoogleSpreadsheet,
 					parser: Miso.Dataset.Parsers.GoogleSpreadsheet,
-					key: "0Aio29w9-EzLudEREZ3ZaREF5T2NuSXRmaXhHMFczOHc",
+					key: "YOUR_GOOGLE_SHEETS_KEY",
 					worksheet: "1"
 				});
 
